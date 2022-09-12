@@ -12,14 +12,17 @@ function App() {
   useEffect(() => {
     socket.on('connect', () => {
       setIsConnected(true);
+      console.log("connect");
     });
 
     socket.on('disconnect', () => {
       setIsConnected(false);
+      console.log("dconnect");
     });
 
     socket.on('pong', () => {
       setLastPong(new Date().toISOString());
+      console.log("pong");
     });
 
     return () => {

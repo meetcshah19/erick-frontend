@@ -1,4 +1,4 @@
-import { Map, Marker, GoogleApiWrapper } from "google-maps-react";
+import { Map as Gmap, Marker, GoogleApiWrapper } from "google-maps-react";
 import { useEffect, useState } from "react";
 
 function MapContainer(props) {
@@ -6,14 +6,16 @@ function MapContainer(props) {
 
   useEffect(() => {
     props.socket.on("update", (location) => {
-      console.log(location);
-      locations.set(location.erick_id,{location})
-      setLocations(locations);
+      setLocations(map => new Map(locations.set(location.erick_id,location)));
+      // console.log(locations);
+    });
+    props.socket.on("test", (location) => {
+      // console.log("got it");
     });
   }, []);
 
   return (
-    <Map
+    <Gmap
       google={props.google}
       zoom={16}
       initialCenter={{
@@ -21,13 +23,21 @@ function MapContainer(props) {
         lng: 77.895636,
       }}
     >
-      {locations.values().map((element) => {
-        return <Marker title={"Erick-Id"} name={""} position={element} />;
-      })}
-    </Map>
+      {
+        Array.from(locations.values()).map(element => {
+          var loc = {
+            lat:parseFloat(element.lat),
+            lng:parseFloat(element.lng)
+          };
+          console.log(element)
+          console.log(loc);
+          return <Marker title={""} name={""} position={loc} />;
+        })
+      }
+    </Gmap>
   );
 }
 
 export default GoogleApiWrapper({
-  apiKey: "AIzaSyAyesbQMyKVVbBgKVi2g6VX7mop2z96jBo",
+  apiKey: "AIzaSyBB5VtbYNkoqHZD9uPohGNszVQnSsCo5ko",
 })(MapContainer);
