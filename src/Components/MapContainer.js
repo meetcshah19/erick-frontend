@@ -1,9 +1,9 @@
+import axios from "axios";
 import { Map as Gmap, Marker, GoogleApiWrapper } from "google-maps-react";
 import { useEffect, useState } from "react";
 
 function MapContainer(props) {
   const [locations, setLocations] = useState(new Map());
-
   useEffect(() => {
     props.socket.on("update", (location) => {
       setLocations(map => new Map(locations.set(location.erick_id,location)));
@@ -13,7 +13,14 @@ function MapContainer(props) {
       // console.log("got it");
     });
   }, []);
-
+  useEffect( () => {
+    axios.get(`/get_erick_data/`).then((response) => {
+      response.data.map(element => {
+        setLocations(map => new Map(locations.set(element._id,element.data)));
+      });
+      console.log(locations);
+    });
+  },[]);
   return (
     <Gmap
       google={props.google}
@@ -29,8 +36,6 @@ function MapContainer(props) {
             lat:parseFloat(element.lat),
             lng:parseFloat(element.lng)
           };
-          console.log(element)
-          console.log(loc);
           return <Marker title={""} name={""} position={loc} />;
         })
       }
