@@ -51,7 +51,7 @@ function MapContainer(props) {
     if (erick_id.length > 0 && start_date && end_date) {
       axios
         .get(
-          `/get_erick_data?erick_id=${erick_id}&start_date=${new Date(start_date)}&end_date=${end_date}`
+          `/get_erick_data?erick_id=${erick_id}&start_date=${start_date}&end_date=${end_date}`
         )
         .then((response) => {
           setFilterLocations(response.data);
