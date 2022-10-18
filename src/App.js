@@ -33,7 +33,9 @@ function App() {
   }, []);
 
   return (
+    <>
     <MapContainer socket={socket}></MapContainer>
+    </>
   );
 }
 
