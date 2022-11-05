@@ -21,8 +21,13 @@ function Home() {
     useEffect(() => {
         setSerialisedData(serialise(data))
     }, [data])
+    function handleLogout(){
+        localStorage.removeItem('loggedIn')
+        window.location ='/login'
+    }
 
     return (
+        <>
         <div className="HomeTable">
             <table>
                 <tbody>
@@ -32,7 +37,7 @@ function Home() {
                         <th>Driver's Contact</th>
                         <th>Latitude</th>
                         <th>Longitude</th>
-
+                        <div className='Logout'><button onClick={handleLogout}>Logout</button></div>
                     </tr>
                 </tbody>
                 {serialisedData.map((val, key) => {
@@ -48,12 +53,16 @@ function Home() {
                                     pathname: "/map",
                                     search: `?params_erick_id=${val.id}`,
                                 }}
-                            > Go to Map</Link></td>
+                                > Go to Map</Link></td>
                         </tr>
             )
-                })}
+        })}
         </table>
         </div >
+        
+
+        </>
+        
     );
 }
 

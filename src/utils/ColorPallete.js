@@ -12,7 +12,7 @@ const hexCode = [
     code: {
       hex: "#DC143C	"
     },
-    id: 2
+    id: "eui-0102030405060710"
   },
 
   {

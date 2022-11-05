@@ -35,12 +35,12 @@ function Trajectory(props) {
     useEffect(() => {
         onFilterChange(null);
     }, [erick_id, start_date, end_date]);
-    
+
     useEffect(() => {
         setInterval(() => {
-          setShowMarker(true);
+            setShowMarker(true);
         }, 600);
-      }, []);
+    }, []);
     const onFilterChange = (event) => {
         console.log("filter change");
         console.log(
@@ -275,8 +275,15 @@ function Trajectory(props) {
                         lat: parseFloat(element.lat),
                         lng: parseFloat(element.lng),
                     };
-                    setTimeout(() => console.log('Initial timeout!'),100000 );
-                    return <Marker title={""} name={""} position={loc} icon={customIcon(id)} onClick={(_, marker) => {setSelectedElement(element);setActiveMarker(marker);}} />;
+                    return <Marker
+                        title={""}
+                        name={""}
+                        position={loc}
+                        icon={customIcon(id)}
+                        onClick={(_, marker) => {
+                            setSelectedElement(element);
+                            setActiveMarker(marker);
+                        }} />;
                 })}
                 {selectedElement && (
                     <InfoWindow

@@ -5,17 +5,18 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
 } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import Home from './Components/Home'
 import Trajectory from './Components/Trajectory';
+import Login from './Components/Login';
 
 const socket = io();
 
 function App() {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [lastPong, setLastPong] = useState(null);
+  const [loggedIn, setLoggedIn] = useState('true');
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -40,6 +41,17 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    console.log(window.location.pathname, loggedIn !== 'true')
+    if (window.location.pathname !== '/login' && loggedIn !== 'true') {
+      window.location = '/login'
+    }
+  }, [loggedIn])
+
+  useEffect(() => {
+    setLoggedIn(localStorage.getItem('loggedIn'))
+  }, [localStorage])
+
   return (
     <>
       <Router>
@@ -51,7 +63,10 @@ function App() {
             <MapContainer socket={socket}></MapContainer>
           </Route>
           <Route path="/trajectory">
-          <Trajectory/>
+            <Trajectory />
+          </Route>
+          <Route path="/login">
+            <Login />
           </Route>
         </Switch>
       </Router>
