@@ -14,9 +14,10 @@ import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import getColor from "../utils/getColor";
 
 
-function MapContainer(props) {
+function MapContainer(props,trajectoryStatus) {
   const [locations, setLocations] = useState(new Map());
   const [filterLocations, setFilterLocations] = useState([]);
   const [live, setLive] = React.useState(true);
@@ -27,8 +28,11 @@ function MapContainer(props) {
   const [selectedElement, setSelectedElement] = useState(null);
   const [activeMarker, setActiveMarker] = useState(null);
   const [showInfoWindow, setInfoWindowFlag] = useState(true);
+  const [trajectory, setTrajectory] = useState(false)
 
-
+  let params = (new URL(document.location)).searchParams;
+  let params_erick_id = params.get("params_erick_id");
+  
   useEffect(()=>{
     console.log({selectedElement})
   },[selectedElement])
@@ -44,6 +48,11 @@ function MapContainer(props) {
     console.log("erick_id: " + event.target.value);
     setIdSet(true);
   };
+  const handleRedirect = (a) => {
+    setErick_id(a)
+    console.log({a})
+    setIdSet(true)
+  }
   useEffect(() => {
     onFilterChange(null);
   }, [erick_id, start_date, end_date]);
@@ -171,7 +180,27 @@ function MapContainer(props) {
         );
       });
     });
-  }, []);
+  }, []); 
+
+  useEffect(()=>{
+    if(params_erick_id){
+      console.log("loaded")
+      setLive(false)
+      handleRedirect(params_erick_id)
+    }
+  },[])
+
+  
+
+  const customIcon = (id) =>
+      ({
+        path: "M17.402,0H5.643C2.526,0,0,3.467,0,6.584v34.804c0,3.116,2.526,5.644,5.643,5.644h11.759c3.116,0,5.644-2.527,5.644-5.644 V6.584C23.044,3.467,20.518,0,17.402,0z M22.057,14.188v11.665l-2.729,0.351v-4.806L22.057,14.188z M20.625,10.773 c-1.016,3.9-2.219,8.51-2.219,8.51H4.638l-2.222-8.51C2.417,10.773,11.3,7.755,20.625,10.773z M3.748,21.713v4.492l-2.73-0.349 V14.502L3.748,21.713z M1.018,37.938V27.579l2.73,0.343v8.196L1.018,37.938z M2.575,40.882l2.218-3.336h13.771l2.219,3.336H2.575z M19.328,35.805v-7.872l2.729-0.355v10.048L19.328,35.805z",
+        fillColor: getColor(id) ,
+        fillOpacity: 1,
+        strokeColor: "#000",
+        strokeWeight: 1,
+        scale: 0.8,
+      });
   return (
     <>
         <Box sx={{ flexGrow: 1 }}>
@@ -290,26 +319,28 @@ function MapContainer(props) {
       >
         
         {live
-          ? Array.from(locations.values()).map((element) => {
-            console.log("fetched from socket",element)
-              var loc = {
-                lat: parseFloat(element.lat),
-                lng: parseFloat(element.lng),
-              };
-              return (<Marker title={""} name={""} position={loc} onClick={(_,marker) => {
+          ? Array.from(locations).map((element) => {
+            let id = element[0]
+            var loc = {
+              lat: parseFloat(element[1].lat),
+              lng: parseFloat(element[1].lng),
+            };
+            
+              return (<Marker title={""} name={""} position={loc} icon = {customIcon(id)} onClick={(_,marker) => {
                 console.log("Click")
                 setSelectedElement(element);
                 setActiveMarker(marker);
               }}
 />);
             })
-          : Array.from(filterLocations.values()).map((element) => {
-            console.log(element)
+          : Array.from(filterLocations).map((element) => {
+            let id = element["erick_id"]
+            
               var loc = {
-                lat: parseFloat(element.latitude),
-                lng: parseFloat(element.longitude),
+                lat: parseFloat(element.lat),
+                lng: parseFloat(element.lng),
               };
-              return <Marker title={""} name={""} position={loc} onClick={(_, marker) => {
+              return <Marker title={""} name={""} position={loc} icon={customIcon(id)} onClick={(_, marker) => {
                 
                 setSelectedElement(element);
                 setActiveMarker(marker);
@@ -325,7 +356,8 @@ function MapContainer(props) {
               >
             <div>
             {console.log(showInfoWindow, activeMarker)}
-              <h1>{selectedElement?.latitude ? selectedElement.longitude : selectedElement.lng}</h1>
+              <h2>Driver Name: {selectedElement.driver_name}</h2>
+              <h2>Driver Contact: {selectedElement.driver_contact}</h2>
             </div>
           </InfoWindow> 
         )}

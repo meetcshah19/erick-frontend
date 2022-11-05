@@ -8,6 +8,8 @@ import {
   Link
 } from "react-router-dom";
 import { useEffect, useState } from 'react';
+import Home from './Components/Home'
+import Trajectory from './Components/Trajectory';
 
 const socket = io();
 
@@ -40,12 +42,19 @@ function App() {
 
   return (
     <>
-    <Router>
-      <Switch>
-
-      </Switch>
-    </Router>
-    <MapContainer socket={socket}></MapContainer>
+      <Router>
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route path="/map">
+            <MapContainer socket={socket}></MapContainer>
+          </Route>
+          <Route path="/trajectory">
+          <Trajectory/>
+          </Route>
+        </Switch>
+      </Router>
     </>
   );
 }
