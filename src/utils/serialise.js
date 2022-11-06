@@ -3,7 +3,6 @@ function serialise(data){
     return Array.from(data.keys()).map((key)=>{
 
         const value = data.get(key); 
-        console.log(key, value)
         let id = key;
         let lat = value.lat
         let lng = value.lng

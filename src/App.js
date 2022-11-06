@@ -11,6 +11,7 @@ import Home from './Components/Home'
 import Trajectory from './Components/Trajectory';
 import Login from './Components/Login';
 
+import Layout from './Components/SideBar';
 const socket = io();
 
 function App() {
@@ -57,6 +58,7 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/">
+            {/* <Layout/> */}
             <Home />
           </Route>
           <Route path="/map">

@@ -17,6 +17,7 @@ import getColor from "../utils/getColor";
 function Trajectory(props) {
     const [locations, setLocations] = useState(new Map());
     const [filterLocations, setFilterLocations] = useState([]);
+    const [trajectoryLocations, setTrajectoryLocations] = useState([]);
     const [idSet, setIdSet] = React.useState(false);
     const [erick_id, setErick_id] = React.useState("");
     const [start_date, setStart_date] = React.useState(null);
@@ -150,6 +151,7 @@ function Trajectory(props) {
         },
     }));
 
+ 
     useEffect(() => {
         axios.get(`/get_erick_data/`).then((response) => {
             response.data.map((element) => {

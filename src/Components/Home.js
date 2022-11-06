@@ -4,10 +4,13 @@ import { useEffect, useState } from 'react';
 import serialise from '../utils/serialise';
 import './Home.css'
 import { Link } from 'react-router-dom';
+import Layout from './SideBar';
+import { AppBar, Button, Toolbar, Typography } from '@mui/material';
 
 function Home() {
     const [data, setData] = useState(new Map())
     const [serialisedData, setSerialisedData] = useState([])
+    const [drawerOpen, setDrawerOpen] = useState(false)
     useEffect(() => {
         axios.get(`/get_erick_data/`).then((response) => {
             response.data.map((element) => {
@@ -21,48 +24,64 @@ function Home() {
     useEffect(() => {
         setSerialisedData(serialise(data))
     }, [data])
-    function handleLogout(){
+    function handleLogout() {
         localStorage.removeItem('loggedIn')
-        window.location ='/login'
+        window.location = '/login'
     }
 
     return (
         <>
-        <div className="HomeTable">
-            <table>
-                <tbody>
-                    <tr>
-                        <th>Erick-ID</th>
-                        <th>Driver's Name</th>
-                        <th>Driver's Contact</th>
-                        <th>Latitude</th>
-                        <th>Longitude</th>
-                        <div className='Logout'><button onClick={handleLogout}>Logout</button></div>
-                    </tr>
-                </tbody>
-                {serialisedData.map((val, key) => {
-                    return (
-                        <tr key={key}>
-                            <td>{val.id}</td>
-                            <td>{val.driver_name}</td>
-                            <td>{val.driver_contact}</td>
-                            <td>{val.lat}</td>
-                            <td>{val.lng}</td>
-                            <td> <Link
-                                to={{
-                                    pathname: "/map",
-                                    search: `?params_erick_id=${val.id}`,
-                                }}
-                                > Go to Map</Link></td>
+            <AppBar position="static">
+                <Toolbar>
+                    <Button onClick={() => {setDrawerOpen(!drawerOpen)}} style={{color: 'white'}}>
+                        Menu
+                    </Button>
+                    <Typography>
+                        E-RICK
+                    </Typography>
+                    <Button onClick={handleLogout} style={{color: 'white'}}>
+                        LOGOUT
+                    </Button>
+                </Toolbar>
+            </AppBar>
+            <div className="HomeTable">
+                <Layout open={drawerOpen} openFunc={setDrawerOpen}/>
+                <table style={{width:'80vw'}}>
+                    <tbody>
+                        <tr>
+                            <th>Erick-ID</th>
+                            <th>Driver's Name</th>
+                            <th>Driver's Contact</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
                         </tr>
-            )
-        })}
-        </table>
-        </div >
-        
+                    </tbody>
+                    {serialisedData.map((val, key) => {
+                        return (
+                            <tbody>
+
+                                <tr key={key}>
+                                    <td>{val.id}</td>
+                                    <td>{val.driver_name}</td>
+                                    <td>{val.driver_contact}</td>
+                                    <td>{val.lat}</td>
+                                    <td>{val.lng}</td>
+                                    <td> <Link
+                                        to={{
+                                            pathname: "/map",
+                                            search: `?params_erick_id=${val.id}`,
+                                        }}
+                                    > Go to Map</Link></td>
+                                </tr>
+                            </tbody>
+                        )
+                    })}
+                </table>
+            </div >
+            
 
         </>
-        
+
     );
 }
 

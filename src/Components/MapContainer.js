@@ -9,12 +9,13 @@ import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormGroup from "@mui/material/FormGroup";
 import { styled } from "@mui/material/styles";
-import { InputLabel, MenuItem, Select } from "@mui/material";
+import { Button, InputLabel, Link, MenuItem, Select } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import getColor from "../utils/getColor";
+import { Redirect } from "react-router-dom";
 
 
 function MapContainer(props,trajectoryStatus) {
@@ -32,6 +33,10 @@ function MapContainer(props,trajectoryStatus) {
 
   let params = (new URL(document.location)).searchParams;
   let params_erick_id = params.get("params_erick_id");
+
+  function navigateToHome () {
+    
+  } 
   
   useEffect(()=>{
     console.log({selectedElement})
@@ -203,9 +208,15 @@ function MapContainer(props,trajectoryStatus) {
       });
   return (
     <>
+  
         <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
+            
+            <Button style={{color: 'white'}} onClick = {navigateToHome}>
+              HOME
+            </Button>
+           
             <FormGroup>
               <FormControlLabel
                 control={
@@ -327,7 +338,7 @@ function MapContainer(props,trajectoryStatus) {
             };
             
               return (<Marker title={""} name={""} position={loc} icon = {customIcon(id)} onClick={(_,marker) => {
-                console.log("Click")
+                console.log("on lclick socket",element.driver_name, element)
                 setSelectedElement(element);
                 setActiveMarker(marker);
               }}
@@ -341,7 +352,7 @@ function MapContainer(props,trajectoryStatus) {
                 lng: parseFloat(element.lng),
               };
               return <Marker title={""} name={""} position={loc} icon={customIcon(id)} onClick={(_, marker) => {
-                
+                console.log("on lclick filter",element.driver_name, element)
                 setSelectedElement(element);
                 setActiveMarker(marker);
               }}/>;
@@ -355,9 +366,18 @@ function MapContainer(props,trajectoryStatus) {
               }}
               >
             <div>
-            {console.log(showInfoWindow, activeMarker)}
-              <h2>Driver Name: {selectedElement.driver_name}</h2>
-              <h2>Driver Contact: {selectedElement.driver_contact}</h2>
+            {live?(
+            <>
+            <h2>Driver Name: {selectedElement[1].driver_name}</h2>
+            <h2>Driver Contact: {selectedElement[1].driver_contact}</h2>
+            </>)
+            :
+            <>
+            <h2>Driver Name: {selectedElement.driver_name}</h2>
+            <h2>Driver Contact: {selectedElement.driver_contact}</h2>
+            </>
+
+            }
             </div>
           </InfoWindow> 
         )}
