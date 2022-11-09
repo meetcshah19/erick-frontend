@@ -21,7 +21,10 @@ import {
   IconButton,
   TableContainer,
   TablePagination,
+  Grid,
 } from '@mui/material';
+
+import { AppWidgetSummary } from '../sections/@dashboard/app';
 // components
 import Label from '../components/label';
 import Iconify from '../components/iconify';
@@ -35,9 +38,11 @@ import USERLIST from '../_mock/user';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
+  { id: 'erick_id', label: 'Erick-Id', alignRight: false },
+  { id: 'contact', label: 'Contact', alignRight: false },
+  { id: 'latitude', label: 'Latitude', alignRight: false },
+  { id: 'longitude', label: 'Longitude', alignRight: false },
+  { id: 'last_updated', label: 'Last Updated', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: '' },
 ];
@@ -153,15 +158,23 @@ export default function UserPage() {
       </Helmet>
 
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" gutterBottom>
-            User
-          </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New User
-          </Button>
-        </Stack>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6} md={3}>
+            <AppWidgetSummary title="Registered E-Ricks" total={3} icon={'ant-design:android-filled'} />
+          </Grid>
 
+          <Grid item xs={12} sm={6} md={3}>
+            <AppWidgetSummary title="Locations Reported" total={226} color="info" icon={'ant-design:apple-filled'} />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <AppWidgetSummary title="Time Served in Hours" total={24} color="warning" icon={'ant-design:windows-filled'} />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <AppWidgetSummary title="Rides Facilitated" total={1} color="error" icon={'ant-design:bug-filled'} />
+          </Grid>
+        </Grid>
         <Card>
           <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
@@ -184,19 +197,7 @@ export default function UserPage() {
 
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                        <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
-                        </TableCell>
-
-                        <TableCell component="th" scope="row" padding="none">
-                          <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
-                          </Stack>
-                        </TableCell>
-
+                        
                         <TableCell align="left">{company}</TableCell>
 
                         <TableCell align="left">{role}</TableCell>
@@ -209,7 +210,7 @@ export default function UserPage() {
 
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
-                            <Iconify icon={'eva:more-vertical-fill'} />
+                            <Iconify icon={'bx:map'} />
                           </IconButton>
                         </TableCell>
                       </TableRow>
