@@ -54,18 +54,20 @@ function Home() {
                             <th>Driver's Contact</th>
                             <th>Latitude</th>
                             <th>Longitude</th>
+                            <th>Last Updated </th>
+                            <th>Show on Map</th>
                         </tr>
                     </tbody>
                     {serialisedData.map((val, key) => {
                         return (
                             <tbody>
-
                                 <tr key={key}>
                                     <td>{val.id}</td>
                                     <td>{val.driver_name}</td>
                                     <td>{val.driver_contact}</td>
                                     <td>{val.lat}</td>
                                     <td>{val.lng}</td>
+                                    <td> {val.received_at}</td>
                                     <td> <Link
                                         to={{
                                             pathname: "/map",

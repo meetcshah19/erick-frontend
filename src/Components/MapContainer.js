@@ -15,7 +15,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import getColor from "../utils/getColor";
-import { Redirect } from "react-router-dom";
+import serialise from "../utils/serialise";
+
 
 
 function MapContainer(props,trajectoryStatus) {
@@ -204,7 +205,7 @@ function MapContainer(props,trajectoryStatus) {
         fillOpacity: 1,
         strokeColor: "#000",
         strokeWeight: 1,
-        scale: 0.8,
+        scale: 0.6,
       });
   return (
     <>
@@ -352,9 +353,9 @@ function MapContainer(props,trajectoryStatus) {
                 lng: parseFloat(element.lng),
               };
               return <Marker title={""} name={""} position={loc} icon={customIcon(id)} onClick={(_, marker) => {
-                console.log("on lclick filter",element.driver_name, element)
-                setSelectedElement(element);
-                setActiveMarker(marker);
+                setSelectedElement(element)
+                setActiveMarker(marker)
+              
               }}/>;
             })}
             {selectedElement && (
@@ -367,14 +368,21 @@ function MapContainer(props,trajectoryStatus) {
               >
             <div>
             {live?(
+              
             <>
-            <h2>Driver Name: {selectedElement[1].driver_name}</h2>
-            <h2>Driver Contact: {selectedElement[1].driver_contact}</h2>
+            <h4>Driver Name:{selectedElement[1].driver_name}</h4>
+            <h4>Driver Contact: {selectedElement[1].driver_contact}</h4>
+            <h4>Updated At: {serialise(selectedElement[1].received_at)}</h4>
+            <h4>Latitude: {selectedElement[1].lat}</h4>
+            <h4>Longitude: {selectedElement[1].lng}</h4>
             </>)
             :
             <>
-            <h2>Driver Name: {selectedElement.driver_name}</h2>
-            <h2>Driver Contact: {selectedElement.driver_contact}</h2>
+            <h4>Driver Name: {selectedElement.driver_name}</h4>
+            <h4>Driver Contact: {selectedElement.driver_contact}</h4>
+            <h4>Updated At: {serialise(selectedElement.received_at)}</h4>
+            <h4>Latitude: {selectedElement.lat}</h4>
+            <h4>Longitude: {selectedElement.lng}</h4>
             </>
 
             }
