@@ -7,11 +7,9 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import MapContainer from './pages/MapContainer';
-import io from 'socket.io-client';
-const socket = io();
+import Trajectory from './pages/Trajectory';
 
-
-export default function Router() {
+export default function Router(props) {
   const routes = useRoutes([
     {
       path: '/dashboard',
@@ -19,8 +17,8 @@ export default function Router() {
       children: [
         { element: <Navigate to="/login" />, index: true },
         { path: 'app', element: <UserPage /> },
-        { path: 'map', element: <MapContainer socket={socket}/> },
-        { path: 'trajectory', element: <ProductsPage /> },
+        { path: 'map', element: <MapContainer socket={props.socket}/> },
+        { path: 'trajectory', element: <Trajectory socket={props.socket}/> },
         { path: 'downlink', element: <ProductsPage /> },
       ],
     },
