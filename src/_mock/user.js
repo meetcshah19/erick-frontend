@@ -1,27 +1,29 @@
-import { faker } from '@faker-js/faker';
-import { sample } from 'lodash';
 
-// ----------------------------------------------------------------------
+import axios from "axios";
+import { useState , useEffect} from 'react';
+import serialise from "../utils/serialise";
+/* eslint-disable */
+function User(){
+  const [data, setData] = useState(new Map())
 
-const users = [...Array(24)].map((_, index) => ({
-  id: faker.datatype.uuid(),
-  avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
-  name: faker.name.fullName(),
-  company: faker.company.name(),
-  isVerified: faker.datatype.boolean(),
-  status: sample(['active', 'banned']),
-  role: sample([
-    'Leader',
-    'Hr Manager',
-    'UI Designer',
-    'UX Designer',
-    'UI/UX Designer',
-    'Project Manager',
-    'Backend Developer',
-    'Full Stack Designer',
-    'Front End Developer',
-    'Full Stack Developer',
-  ]),
-}));
+  const [serialisedData, setSerialisedData] = useState([])
+   
+  useEffect(() => {
+   axios.get(`/get_erick_data/`).then((response) => {
+       response.data.map((element) => {
+           setData(
+               (map) => new Map(map.set(element._id, element.data))
+           );
+       });
+  });
+ }, []);
+ useEffect(() => {
+   setSerialisedData(serialise(data))
+ }, [data])
+ 
+ console.log({serialisedData})
+ return serialisedData
 
-export default users;
+}
+
+export default User;
