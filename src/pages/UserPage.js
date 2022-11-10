@@ -188,19 +188,19 @@ console.log("lmao ded",{serialisedData})
       <Container>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Registered E-Ricks" total={3} icon={'ant-design:android-filled'} />
+            <AppWidgetSummary title="Registered E-Ricks" total={3} icon={'fluent-mdl2:verified-brand-solid'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Locations Reported" total={226} color="info" icon={'ant-design:apple-filled'} />
+            <AppWidgetSummary title="Locations Reported" total={226} color="info" icon={'fa6-solid:location-crosshairs'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Time Served in Hours" total={24} color="warning" icon={'ant-design:windows-filled'} />
+            <AppWidgetSummary title="Time Served in Hours" total={24} color="warning" icon={'ant-design:field-time-outlined'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Rides Facilitated" total={1} color="error" icon={'ant-design:bug-filled'} />
+            <AppWidgetSummary title="Rides Facilitated" total={1} color="error" icon={'majesticons:map-marker-path'} />
           </Grid>
         </Grid>
         <Card>

@@ -14,12 +14,12 @@ const navConfig = [
   {
     title: 'Map',
     path: '/dashboard/map',
-    icon: icon('ic_cart'),
+    icon: icon('ic_analytics'),
   },
   {
     title: 'Trajectory',
     path: '/dashboard/trajectory',
-    icon: icon('ic_cart'),
+    icon: icon('ic_analytics'),
   },
   {
     title: 'Downlink',
