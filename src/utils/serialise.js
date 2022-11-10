@@ -1,19 +1,22 @@
+/* eslint-disable */
 function serialise(data){
+    console.log("unserialised: ",{data})
     if(data instanceof Map){
+        
         return Array.from(data.keys()).map((key)=>{
             
         const value = data.get(key); 
-        let id = key;
-        let lat = value.lat
-        let lng = value.lng
-        let driver_name = value.driver_name
-        let driver_contact = value.driver_contact
+        const id = key;
+        const lat = value.lat
+        const lng = value.lng
+        const driver_name = value.driver_name
+        const driver_contact = value.driver_contact
         let received_at = value.received_at
-        let date = new Date(received_at)
-        let year = date.getFullYear()
-        let month = date.getMonth()+1
-        let dt = date.getDate()
-        console.log("meet:"+received_at)
+        const date = new Date(received_at)
+        const year = date.getFullYear()
+        const month = date.getMonth()+1
+        const dt = date.getDate()
+     
         let result = new Date(received_at).toLocaleTimeString();
         received_at = result + ', ' + dt + '/' + month + '/'+ year
 
@@ -24,15 +27,15 @@ function serialise(data){
             driver_contact,
             driver_name,
             received_at
-        }
+    }
     });
 }
 else{
     let received_at = data
-    let date = new Date(received_at)
-    let year = date.getFullYear()
-    let month = date.getMonth()+1
-    let dt = date.getDate()
+    const date = new Date(received_at)
+    const year = date.getFullYear()
+    const month = date.getMonth()+1
+    const dt = date.getDate()
     let result = new Date(received_at).toLocaleTimeString();
     received_at = result + ', ' + dt + '/' + month + '/'+ year
     return (

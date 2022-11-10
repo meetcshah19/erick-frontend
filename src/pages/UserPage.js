@@ -1,7 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useState , useEffect} from 'react';
+import axios from "axios";
+import { useNavigate ,createSearchParams} from "react-router-dom";
 // @mui
 import {
   Card,
@@ -23,28 +24,27 @@ import {
   TablePagination,
   Grid,
 } from '@mui/material';
+import serialise from "../utils/serialise";
 
 import { AppWidgetSummary } from '../sections/@dashboard/app';
 // components
-import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
-// mock
-import USERLIST from '../_mock/user';
+
 
 // ----------------------------------------------------------------------
 
+
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
+  { id: 'driver_name', label: 'Name', alignRight: false },
   { id: 'erick_id', label: 'Erick-Id', alignRight: false },
   { id: 'contact', label: 'Contact', alignRight: false },
   { id: 'latitude', label: 'Latitude', alignRight: false },
   { id: 'longitude', label: 'Longitude', alignRight: false },
-  { id: 'last_updated', label: 'Last Updated', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: '' },
+  { id: 'last Updated', label: 'Last Updated', alignRight: false },
+  { id: 'Go to Map', label: 'Go to Map', alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -93,8 +93,34 @@ export default function UserPage() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const handleOpenMenu = (event) => {
-    setOpen(event.currentTarget);
+  const [data, setData] = useState(new Map())
+
+  const [serialisedData, setSerialisedData] = useState([])
+  
+  const navigate = useNavigate();
+ useEffect(() => {
+  axios.get(`/get_erick_data/`).then((response) => {
+      response.data.map((element) => {
+          setData(
+              (map) => new Map(map.set(element._id, element.data))
+          );
+      });
+ });
+}, []);
+useEffect(() => {
+  setSerialisedData(serialise(data))
+}, [data])
+
+console.log("lmao ded",{serialisedData})
+
+  const handleOpenMenu = (id) => {
+    console.log({id})
+    navigate({
+    pathname: "/dashboard/map",
+    search: createSearchParams({
+        params_erick_id: id
+    }).toString()})
+    console.log(2)
   };
 
   const handleCloseMenu = () => {
@@ -109,18 +135,18 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = serialisedData.map((n) => n.driver_name);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, drive_name) => {
+    const selectedIndex = selected.indexOf(drive_name);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, drive_name);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -145,16 +171,18 @@ export default function UserPage() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - serialisedData.length) : 0;
+  // Array of arrays to array of objects
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+
+  const filteredUsers = applySortFilter(serialisedData, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
   return (
     <>
       <Helmet>
-        <title> User | Minimal UI </title>
+        <title> Erick Portal </title>
       </Helmet>
 
       <Container>
@@ -185,31 +213,35 @@ export default function UserPage() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={serialisedData.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role, status, company, avatarUrl, isVerified } = row;
-                    const selectedUser = selected.indexOf(name) !== -1;
-
+                    console.log({row})
+                    let { id, driver_name, driver_contact, lng, lat, received_at } = row;
+                    const selectedUser = selected.indexOf(driver_name) !== -1;
+                    console.log("row:", row); 
+               
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         
-                        <TableCell align="left">{company}</TableCell>
+                        <TableCell align="left">{driver_name}</TableCell>
 
-                        <TableCell align="left">{role}</TableCell>
+                        <TableCell align="left">{id}</TableCell>
 
-                        <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
+                        <TableCell align="left">{ driver_contact}</TableCell>
 
-                        <TableCell align="left">
-                          <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
-                        </TableCell>
+                        <TableCell align="left">{lat}</TableCell>
 
+                        <TableCell align="left">{lng}</TableCell>
+
+                        <TableCell align="left">{received_at}</TableCell>
+                        
                         <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                          <IconButton size="large" color="inherit" onClick={()=>{handleOpenMenu(id)}}>
                             <Iconify icon={'bx:map'} />
                           </IconButton>
                         </TableCell>
@@ -253,7 +285,7 @@ export default function UserPage() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={serialisedData.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
