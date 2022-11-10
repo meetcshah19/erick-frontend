@@ -1,15 +1,19 @@
 import { Helmet } from 'react-helmet-async';
 import { useState } from 'react';
-// @mui
-import { Container, Stack, Typography } from '@mui/material';
+import axios from 'axios'
+import { TextField , Button } from '@mui/material';
 // components
-import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
+
 // mock
-import PRODUCTS from '../_mock/products';
+
 
 // ----------------------------------------------------------------------
 
 export default function ProductsPage() {
+  const [erickValue, setErickValue] = useState("")
+
+  const [byteValue, setByteValue] = useState("")
+
   const [openFilter, setOpenFilter] = useState(false);
 
   const handleOpenFilter = () => {
@@ -19,32 +23,37 @@ export default function ProductsPage() {
   const handleCloseFilter = () => {
     setOpenFilter(false);
   };
+const handleDownlink = () => {
+  console.log(erickValue, byteValue)
+  axios({
+    method: "post",
+    url: "/downlink/",
+    data: {"erick_id":erickValue, "data":byteValue}
+  }).then(console.log("Data sent"))
+}
 
+const handleChangeVal = e => {
+  setErickValue(e.target.value)
+}
+
+const handleChangeByte = e => {
+  setByteValue(e.target.value)
+}
   return (
     <>
       <Helmet>
-        <title> Dashboard: Products | Minimal UI </title>
+        <title> E-Rick Tracking System </title>
       </Helmet>
 
-      <Container>
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Products
-        </Typography>
+    <div>
+      <TextField value={erickValue} style = {{width: 300}} label="Erick-ID" color="secondary" focused onChange={handleChangeVal}/>
+      <TextField value={byteValue} style = {{width: 300}} label="Enter String" color="secondary" focused onChange={handleChangeByte}/>
+      <Button variant="contained" onClick={handleDownlink} >Send Downlink</Button>
+    
+    </div>
+     
 
-        <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="flex-end" sx={{ mb: 5 }}>
-          <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
-            <ProductFilterSidebar
-              openFilter={openFilter}
-              onOpenFilter={handleOpenFilter}
-              onCloseFilter={handleCloseFilter}
-            />
-            <ProductSort />
-          </Stack>
-        </Stack>
 
-        <ProductList products={PRODUCTS} />
-        <ProductCartWidget />
-      </Container>
     </>
   );
 }
