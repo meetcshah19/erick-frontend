@@ -16,6 +16,7 @@ export default function Router(props) {
       element: <DashboardLayout />,
       children: [
         { element: <Navigate to="/login" />, index: true },
+        { path: 'login', element: <LoginPage /> },
         { path: 'app', element: <UserPage /> },
         { path: 'map', element: <MapContainer socket={props.socket}/> },
         { path: 'trajectory', element: <Trajectory socket={props.socket}/> },
