@@ -1,10 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
 import { useState , useEffect} from 'react';
-import serialise from "../utils/serialise";
-import User from '../_mock/user.js'
 import axios from "axios";
+import { useNavigate ,createSearchParams} from "react-router-dom";
 // @mui
 import {
   Card,
@@ -26,16 +24,15 @@ import {
   TablePagination,
   Grid,
 } from '@mui/material';
+import serialise from "../utils/serialise";
 
 import { AppWidgetSummary } from '../sections/@dashboard/app';
 // components
-import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
-// mock
-import USERLIST from '../_mock/user';
+
 
 // ----------------------------------------------------------------------
 
@@ -46,9 +43,8 @@ const TABLE_HEAD = [
   { id: 'contact', label: 'Contact', alignRight: false },
   { id: 'latitude', label: 'Latitude', alignRight: false },
   { id: 'longitude', label: 'Longitude', alignRight: false },
-  { id: 'last_updated', label: 'Last Updated', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: '' },
+  { id: 'last Updated', label: 'Last Updated', alignRight: false },
+  { id: 'Go to Map', label: 'Go to Map', alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -99,8 +95,9 @@ export default function UserPage() {
 
   const [data, setData] = useState(new Map())
 
- const [serialisedData, setSerialisedData] = useState([])
+  const [serialisedData, setSerialisedData] = useState([])
   
+  const navigate = useNavigate();
  useEffect(() => {
   axios.get(`/get_erick_data/`).then((response) => {
       response.data.map((element) => {
@@ -116,8 +113,14 @@ useEffect(() => {
 
 console.log("lmao ded",{serialisedData})
 
-  const handleOpenMenu = (event) => {
-    setOpen(event.currentTarget);
+  const handleOpenMenu = (id) => {
+    console.log({id})
+    navigate({
+    pathname: "/dashboard/map",
+    search: createSearchParams({
+        params_erick_id: id
+    }).toString()})
+    console.log(2)
   };
 
   const handleCloseMenu = () => {
@@ -238,7 +241,7 @@ console.log("lmao ded",{serialisedData})
                         <TableCell align="left">{received_at}</TableCell>
                         
                         <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                          <IconButton size="large" color="inherit" onClick={()=>{handleOpenMenu(id)}}>
                             <Iconify icon={'bx:map'} />
                           </IconButton>
                         </TableCell>
