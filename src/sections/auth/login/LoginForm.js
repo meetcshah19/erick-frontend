@@ -12,9 +12,13 @@ export default function LoginForm() {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [Password, setPassword] = useState("");
+  
 
   const handleClick = () => {
-    navigate('/dashboard', { replace: true });
+    if(Password == "admin"){
+    navigate('/dashboard/app', { replace: true });
+    }
   };
 
   return (
@@ -26,6 +30,7 @@ export default function LoginForm() {
           name="password"
           label="Password"
           type={showPassword ? 'text' : 'password'}
+          onChange={(e) => setPassword(e.target.value)}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -38,12 +43,7 @@ export default function LoginForm() {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <Checkbox name="remember" label="Remember me" />
-        <Link variant="subtitle2" underline="hover">
-          Forgot password?
-        </Link>
-      </Stack>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }} />
 
       <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
         Login

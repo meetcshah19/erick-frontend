@@ -33,10 +33,6 @@ function MapContainer(props,trajectoryStatus) {
   let params = (new URL(document.location)).searchParams;
   let params_erick_id = params.get("params_erick_id");
 
-  function navigateToHome () {
-    
-  } 
-  
   useEffect(()=>{
     console.log({selectedElement})
   },[selectedElement])
@@ -211,11 +207,6 @@ function MapContainer(props,trajectoryStatus) {
         <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
-            
-            <Button style={{color: 'white'}} onClick = {navigateToHome}>
-              HOME
-            </Button>
-           
             <FormGroup>
               <FormControlLabel
                 control={
@@ -266,6 +257,12 @@ function MapContainer(props,trajectoryStatus) {
                       </MenuItem>
                     );
                   })}
+                  <MenuItem
+                        style={{ paddingRight: "20px" }}
+                        value="all"
+                      >
+                        all
+                  </MenuItem>
                 </Select>
                 {idSet ? (
                   <>
@@ -277,7 +274,7 @@ function MapContainer(props,trajectoryStatus) {
                       }}
                       id="demo-simple-select-label"
                     >
-                      Start Time :
+                      Start :
                     </InputLabel>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DateTimePicker
@@ -297,7 +294,7 @@ function MapContainer(props,trajectoryStatus) {
                       }}
                       id="demo-simple-select-label"
                     >
-                      End Time :
+                      End :
                     </InputLabel>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DateTimePicker
@@ -320,6 +317,10 @@ function MapContainer(props,trajectoryStatus) {
       </Box>
 
       <Gmap
+      containerStyle={{
+        height: '75vh',
+        width: '80vw'
+      }}
         google={props.google}
         zoom={16}
         initialCenter={{
@@ -337,7 +338,6 @@ function MapContainer(props,trajectoryStatus) {
             };
             
               return (<Marker title={""} name={""} position={loc} icon = {customIcon(id)} onClick={(_,marker) => {
-                console.log("on lclick socket",element.driver_name, element)
                 setSelectedElement(element);
                 setActiveMarker(marker);
               }}

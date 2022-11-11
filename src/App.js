@@ -3,9 +3,10 @@ import Router from './routes';
 // theme
 import ThemeProvider from './theme';
 // components
+import io from 'socket.io-client';
 import ScrollToTop from './components/scroll-to-top';
 import { StyledChart } from './components/chart';
-
+const socket = io();
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -13,7 +14,7 @@ export default function App() {
     <ThemeProvider>
       <ScrollToTop />
       <StyledChart />
-      <Router />
+      <Router socket={socket}/>
     </ThemeProvider>
   );
 }
